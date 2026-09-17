@@ -15,7 +15,11 @@ public class FetchCustomer_HQL {
 	Configuration con=new Configuration().configure();
 	SessionFactory f=con.buildSessionFactory();
 	Session s=f.openSession();
-	String hql = "Select  b,c from Bookings b join b.customer c";
+	String hql ="SELECT c.customerName, SUM(b.totalAmount) AS totalAmount\r\n"
+			+ "FROM Customer c\r\n"
+			+ "JOIN c.bookings b\r\n"
+			+ "GROUP BY c.customerName\r\n"
+			+ "HAVING SUM(b.totalAmount) > 500";
 	Query<Object[]> query = s.createQuery(hql, Object[].class);
 
 	List<Object[]> list = query.getResultList();
